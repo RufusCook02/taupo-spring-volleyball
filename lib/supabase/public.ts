@@ -1,7 +1,9 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+// Accept either name: Supabase's Vercel integration and newer docs use PUBLISHABLE_KEY, older ones ANON_KEY.
+export const SUPABASE_ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 export const supabaseConfigured = () => Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 

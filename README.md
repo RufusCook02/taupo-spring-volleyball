@@ -52,7 +52,7 @@ Open http://localhost:3000 (public) and http://localhost:3000/admin (TVC). Witho
 ### 4. GitHub + Vercel
 1. Create a GitHub repo and push this folder (`.env.local` is git-ignored – check it isn't committed).
 2. In Vercel: **Add New → Project → Import** the repo. Framework: Next.js (auto-detected).
-3. **Settings → Environment Variables**: add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Production and Preview). Redeploy.
+3. **Settings → Environment Variables**: add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or `NEXT_PUBLIC_SUPABASE_ANON_KEY`) for Production and Preview. The Supabase Vercel integration may add these for you. Redeploy.
 4. In Supabase **Authentication → URL Configuration**, set Site URL to the Vercel URL.
 
 ## Before Saturday – checklist
