@@ -74,6 +74,9 @@ export async function saveScore(_: ActionState, form: FormData): Promise<ActionS
   if (!STATUSES.includes(status)) return { error: 'Unknown status.' };
   const r = gameResult(vals);
   if (status === 'final' && !r.played) return { error: 'A final game needs at least set 1 scores.' };
+  if (status === 'final' && vals.s3a != null && vals.s3a === vals.s3b) {
+    return { error: 'Set 3 is level. Teams play one more point – add it to the set 3 score, then save as Final.' };
+  }
   if (status === 'scheduled' && r.played) status = 'in_progress';
 
   const { error } = await supabase.from('scores').upsert({ game_code: code, ...vals, status });

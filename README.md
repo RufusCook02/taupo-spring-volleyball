@@ -13,7 +13,9 @@ Public draw, live scores, pool standings and playoff brackets for 14–15 Novemb
 - Only games marked **Final** count towards standings and fill in later games (`Pool A 1st`, `Seed 3`, `Winner C19`). Games marked **In progress** show as LIVE.
 - **Exact ties** (wins, points and rally +/- all equal) are flagged, not broken. TVC sets the order on **Admin → Ties**. Any team on any game can also be overridden by hand on the game's admin page.
 - Comp 9th–12th: if the optional 4pm games (C33, C34) aren't played, C23/C24 winners share 9th and losers share 11th.
-- Difference from the spreadsheet: the sheet breaks exact ties by spot/pool order; the site waits for the organiser (per the brief).
+- Differences from the spreadsheet:
+  - The sheet breaks exact standings ties by spot/pool order; the site waits for the organiser (per the brief).
+  - Time-out in set 2 with level sets 1+2 totals and no extra point played: the set 1 winner wins (TVC rule). The sheet would give it to team 2.
 
 ## One-time setup
 
@@ -68,7 +70,8 @@ Open http://localhost:3000 (public) and http://localhost:3000/admin (TVC). Witho
 ## Weekend runbook
 
 - **Enter a score:** Admin → pick day/court → tap the game → type set scores → status **Final** → Save. Use **In progress** to show a game as LIVE while it's being played.
-- **Time ran out in set 2:** enter sets 1 and 2 as played, leave set 3 blank – total points decide.
+- **Time ran out in set 2:** enter sets 1 and 2 as played, leave set 3 blank – total points decide. Level totals: if the extra point was played, add it to the set 2 score; if it wasn't, the set 1 winner wins automatically.
+- **Time ran out in set 3:** enter the set 3 score at the buzzer; whoever is ahead wins. A level set 3 can't be saved as Final – add the extra point first.
 - **Fix a mistake:** open the game, correct and save, or **Clear score**. All changes are in the change log.
 - **Tie:** an amber banner appears on Admin. Go to **Ties**, set the organiser's order.
 - **Forfeit / organiser change:** open the game → *Teams for this game* → choose the team.

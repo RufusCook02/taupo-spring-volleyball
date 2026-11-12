@@ -57,7 +57,25 @@ describe('gameResult (Calc sheet port)', () => {
   it('set 3 with only one score entered is not played', () => {
     const r = gameResult(s([25, 20, 20, 25, 10, null]));
     expect(r.set3Played).toBe(false);
-    // falls back to total points: 45 v 45 → B (sheet uses strict >)
-    expect(r.aWins).toBe(false);
+    // falls back to total points: 45 v 45 level → set 1 winner (team 1)
+    expect(r.aWins).toBe(true);
+  });
+
+  it('time out in set 2 with level totals and no extra point: set 1 winner wins (team 1)', () => {
+    // A wins set 1 25-20; set 2 at buzzer 15-20 → 40 v 40
+    const r = gameResult(s([25, 20, 15, 20]));
+    expect(r).toMatchObject({ setsA: 1, setsB: 1, aWins: true, ptsA: 3, ptsB: 1, rallyDiffA: 0 });
+  });
+
+  it('time out in set 2 with level totals and no extra point: set 1 winner wins (team 2)', () => {
+    // B wins set 1 25-22; set 2 at buzzer 18-15 → 40 v 40
+    const r = gameResult(s([22, 25, 18, 15]));
+    expect(r).toMatchObject({ setsA: 1, setsB: 1, aWins: false, ptsA: 1, ptsB: 3, rallyDiffA: 0 });
+  });
+
+  it('extra point played after level totals is entered in set 2 and decides it', () => {
+    // as above, but team 2 wins the extra point: set 2 recorded 15-21 → 40 v 41
+    const r = gameResult(s([25, 20, 15, 21]));
+    expect(r).toMatchObject({ aWins: false, ptsA: 1, ptsB: 3, rallyDiffA: -1 });
   });
 });

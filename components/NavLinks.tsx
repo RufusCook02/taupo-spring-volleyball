@@ -11,6 +11,7 @@ const NAV = [
   { href: '/division/social', label: 'Social' },
   { href: '/division/comp', label: 'Comp' },
   { href: '/teams', label: 'Teams' },
+  { href: '/rules', label: 'Rules' },
 ];
 
 export default function NavLinks() {
@@ -18,13 +19,13 @@ export default function NavLinks() {
   const active = (href: string) =>
     href === '/' ? path === '/' : path === href || (href === '/teams' && path.startsWith('/team/'));
   return (
-    <ul className="flex whitespace-nowrap font-cond text-[17px] font-semibold uppercase">
+    <ul className="flex whitespace-nowrap font-cond text-base font-semibold uppercase sm:text-[17px]">
       {NAV.map((n) => (
         <li key={n.href}>
           <Link
             href={n.href}
             aria-current={active(n.href) ? 'page' : undefined}
-            className={`inline-block px-[9px] py-2.5 sm:px-3 ${active(n.href) ? 'bg-white text-navy' : 'text-[#B8C6DC] hover:text-white'}`}
+            className={`inline-block px-[6px] py-2.5 sm:px-3 ${active(n.href) ? 'bg-white text-navy' : 'text-[#B8C6DC] hover:text-white'}`}
           >
             {n.label}
           </Link>

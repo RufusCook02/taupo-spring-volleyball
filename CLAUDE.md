@@ -31,7 +31,7 @@ Most people will view it on phones at the venue, so pages need to load fast on p
 
 ## Scoring rules (from the Rules sheet)
 - Pool games: 50-minute clock, best of 3 sets (25, 25, 15), win each set by 2. No timeouts.
-- If time runs out in set 2, total points across sets 1 and 2 decide the game (a tie means play 1 more point). If time runs out in set 3, the score at the buzzer decides.
+- If time runs out in set 2, total points across sets 1 and 2 decide the game (a tie means play 1 more point). If the totals are level and the extra point wasn't played, the set 1 winner wins (TVC rule – the Calc sheet doesn't handle this; the site does). If time runs out in set 3, the score at the buzzer decides.
 - If a game is decided in 2 sets, any third set played does **not** count towards rally points.
 - Pool points: win = 3, loss after winning 1 of the first 2 sets = 1, straight-set loss = 0.
 - Pool placings: most wins, then competition points, then rally-point differential. Exact ties are decided by the organiser, so the site should flag them for TVC to resolve and not pick a winner itself.

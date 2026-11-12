@@ -107,8 +107,15 @@ export function ScoreForm({
         </tbody>
       </table>
       <p className="text-xs text-ink-muted">
-        Time ran out in set 2? Leave set 3 blank – total points across sets 1 and 2 decide.
+        Time ran out in set 2? Leave set 3 blank – total points across sets 1 and 2 decide. If the totals were level
+        and an extra point was played, add it to the set 2 score. If no extra point was played, the set 1 winner wins.
       </p>
+
+      {num('s3a') != null && num('s3a') === num('s3b') && (
+        <p className="rounded bg-amber-50 p-2 text-sm text-amber-900">
+          Set 3 is level – teams play one more point. Add it to the set 3 score before saving as Final.
+        </p>
+      )}
 
       <div className="rounded bg-mist p-2 text-sm">
         {preview.played ? (
