@@ -32,8 +32,8 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
     <div className="space-y-5">
       <AutoRefresh />
       <div>
-        <h1 className="text-xl font-bold">{team.name}</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="heading text-[30px]">{team.name}</h1>
+        <p className="text-sm text-ink-muted">
           <Link href={`/division/${DIVISIONS[team.division].slug}`} className="underline">
             {DIVISIONS[team.division].name}
           </Link>{' '}
@@ -44,21 +44,21 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
       </div>
 
       <section className="space-y-2">
-        <h2 className="font-semibold">Games</h2>
+        <h2 className="heading text-xl">Games</h2>
         {plays.map((g) => (
           <GameCard key={g.code} game={g} showDay highlightTeam={id} />
         ))}
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-ink-muted">
           Sunday playoff games appear here once the results that decide them are in.
         </p>
       </section>
 
       <section className="space-y-2">
-        <h2 className="font-semibold">Duty (referee) times</h2>
+        <h2 className="heading text-xl">Duty (referee) times</h2>
         {duties.length === 0 ? (
-          <p className="text-sm text-slate-500">None yet.</p>
+          <p className="text-sm text-ink-muted">None yet.</p>
         ) : (
-          <ul className="overflow-hidden rounded-lg bg-white text-sm shadow-sm">
+          <ul className="card text-sm">
             {duties.map((g) => (
               <li key={g.code} className="flex gap-3 border-t px-3 py-2 first:border-t-0">
                 <span className="w-28 shrink-0">

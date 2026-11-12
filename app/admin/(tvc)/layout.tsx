@@ -24,7 +24,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           ))}
         </nav>
         <form action={signOut} className="ml-auto flex items-center gap-2">
-          <span className="hidden text-xs text-slate-600 sm:inline">{user.email}</span>
+          <span className="hidden text-xs text-ink-muted sm:inline">{user.email}</span>
           <button className="rounded bg-white px-2 py-1">Sign out</button>
         </form>
       </div>

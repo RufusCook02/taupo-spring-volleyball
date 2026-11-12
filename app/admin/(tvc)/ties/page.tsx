@@ -12,8 +12,8 @@ export default async function AdminTies() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-lg font-bold">Exact ties</h1>
-      <p className="text-sm text-slate-600">
+      <h1 className="heading text-[26px]">Exact ties</h1>
+      <p className="text-sm text-ink-muted">
         When teams are level on wins, competition points and rally +/-, the organiser decides the order. Save it here and
         the standings, seeds and Sunday draw update. For anything else, override the teams on the game itself.
       </p>
@@ -22,17 +22,17 @@ export default async function AdminTies() {
         <p className="rounded bg-green-100 p-2 text-sm text-green-800">No unresolved ties.</p>
       ) : (
         state.tieIssues.map((t) => (
-          <section key={t.scope} className="space-y-2 rounded-lg bg-white p-3 shadow-sm">
-            <h2 className="font-semibold">{t.title}</h2>
-            <p className="text-xs text-slate-500">Tied: {t.teamIds.map(name).join(', ')}. Pick the order, top first.</p>
+          <section key={t.scope} className="space-y-2 card p-3">
+            <h2 className="heading text-xl">{t.title}</h2>
+            <p className="text-xs text-ink-muted">Tied: {t.teamIds.map(name).join(', ')}. Pick the order, top first.</p>
             <TiebreakForm scope={t.scope} teams={t.teamIds.map((id) => ({ id, name: name(id) }))} />
           </section>
         ))
       )}
 
       {raw.tiebreaks.length > 0 && (
-        <section className="space-y-2 rounded-lg bg-white p-3 shadow-sm">
-          <h2 className="font-semibold">Saved tie-breaks</h2>
+        <section className="space-y-2 card p-3">
+          <h2 className="heading text-xl">Saved tie-breaks</h2>
           {raw.tiebreaks.map((tb) => (
             <form key={tb.scope} action={deleteTiebreak} className="flex flex-wrap items-center gap-2 text-sm">
               <input type="hidden" name="scope" value={tb.scope} />

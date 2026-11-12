@@ -12,7 +12,7 @@ function Submit({ children, className = '' }: { children: React.ReactNode; class
     <button
       type="submit"
       disabled={pending}
-      className={`rounded-lg bg-slate-900 px-4 py-3 font-semibold text-white disabled:opacity-50 ${className}`}
+      className={`rounded-lg bg-navy px-4 py-3 font-semibold text-white disabled:opacity-50 ${className}`}
     >
       {pending ? 'Saving…' : children}
     </button>
@@ -87,7 +87,7 @@ export function ScoreForm({
       <input type="hidden" name="code" value={code} />
       <table className="w-full">
         <thead>
-          <tr className="text-left text-xs text-slate-500">
+          <tr className="text-left text-xs text-ink-muted">
             <th className="pb-1">Set</th>
             <th className="pb-1 text-center">{team1}</th>
             <th className="pb-1 text-center">{team2}</th>
@@ -98,7 +98,7 @@ export function ScoreForm({
             <tr key={n}>
               <td className="py-1 font-semibold">
                 {n}
-                <span className="block text-[10px] font-normal text-slate-500">to {n === 3 ? 15 : 25}</span>
+                <span className="block text-[10px] font-normal text-ink-muted">to {n === 3 ? 15 : 25}</span>
               </td>
               <td className="py-1 text-center">{input(`s${n}a` as (typeof KEYS)[number])}</td>
               <td className="py-1 text-center">{input(`s${n}b` as (typeof KEYS)[number])}</td>
@@ -106,11 +106,11 @@ export function ScoreForm({
           ))}
         </tbody>
       </table>
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-ink-muted">
         Time ran out in set 2? Leave set 3 blank – total points across sets 1 and 2 decide.
       </p>
 
-      <div className="rounded bg-slate-50 p-2 text-sm">
+      <div className="rounded bg-mist p-2 text-sm">
         {preview.played ? (
           <>
             Result: <strong>{preview.aWins ? team1 : team2}</strong> win · points {preview.ptsA}–{preview.ptsB} · rally{' '}
@@ -118,7 +118,7 @@ export function ScoreForm({
             {preview.rallyDiffA} for {team1}
           </>
         ) : (
-          <span className="text-slate-500">Enter set 1 to see the result.</span>
+          <span className="text-ink-muted">Enter set 1 to see the result.</span>
         )}
       </div>
 
@@ -137,7 +137,7 @@ export function ScoreForm({
           </label>
         ))}
       </fieldset>
-      <p className="text-xs text-slate-500">Only Final games count for standings and fill in the next round.</p>
+      <p className="text-xs text-ink-muted">Only Final games count for standings and fill in the next round.</p>
 
       <Message state={state} />
       <Submit className="w-full">Save score</Submit>
@@ -193,7 +193,7 @@ export function RenameForm({ id, name }: { id: string; name: string }) {
   return (
     <form action={action} className="flex flex-wrap items-center gap-2">
       <input type="hidden" name="id" value={id} />
-      <span className="w-10 text-xs text-slate-500">{id}</span>
+      <span className="w-10 text-xs text-ink-muted">{id}</span>
       <input name="name" defaultValue={name} maxLength={60} required className="min-w-0 flex-1 rounded border p-2" />
       <Submit className="px-3 py-2 text-sm">Save</Submit>
       {(state.error || state.ok) && (

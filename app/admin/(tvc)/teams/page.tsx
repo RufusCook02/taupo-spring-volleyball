@@ -8,11 +8,11 @@ export default async function AdminTeams() {
   const { teams } = await loadRaw(supabase);
   return (
     <div className="space-y-4">
-      <h1 className="text-lg font-bold">Team names</h1>
-      <p className="text-sm text-slate-600">Renaming a team updates it everywhere in the draw.</p>
+      <h1 className="heading text-[26px]">Team names</h1>
+      <p className="text-sm text-ink-muted">Renaming a team updates it everywhere in the draw.</p>
       {(Object.keys(DIVISIONS) as Division[]).map((d) => (
-        <section key={d} className="space-y-2 rounded-lg bg-white p-3 shadow-sm">
-          <h2 className="font-semibold">{DIVISIONS[d].name}</h2>
+        <section key={d} className="space-y-2 card p-3">
+          <h2 className="heading text-xl">{DIVISIONS[d].name}</h2>
           {teams
             .filter((t) => t.division === d)
             .map((t) => (

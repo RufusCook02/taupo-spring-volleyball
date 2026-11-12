@@ -7,9 +7,19 @@
 }
 
 body {
-  @apply bg-slate-100 text-slate-900 antialiased;
+  @apply bg-mist font-sans text-navy antialiased;
 }
 
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+@layer components {
+  /* Condensed uppercase sports headings */
+  .heading {
+    @apply font-cond font-extrabold uppercase leading-none tracking-wide;
+  }
+  .card {
+    @apply overflow-hidden rounded bg-white shadow-[0_1px_2px_rgba(11,37,89,0.14)];
+  }
 }

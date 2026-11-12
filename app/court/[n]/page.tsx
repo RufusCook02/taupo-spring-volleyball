@@ -22,10 +22,10 @@ export default async function CourtPage({ params }: { params: Promise<{ n: strin
     <div className="space-y-4">
       <AutoRefresh />
       <div className="flex items-baseline gap-3">
-        <h1 className="text-xl font-bold">Court {court}</h1>
+        <h1 className="heading text-[30px]">Court {court}</h1>
         <nav className="flex gap-2 text-sm">
           {COURTS.filter((c) => c !== court).map((c) => (
-            <Link key={c} href={`/court/${c}`} className="text-blue-700 underline">
+            <Link key={c} href={`/court/${c}`} className="underline">
               Court {c}
             </Link>
           ))}
@@ -33,7 +33,7 @@ export default async function CourtPage({ params }: { params: Promise<{ n: strin
       </div>
       {(['sat', 'sun'] as Day[]).map((day) => (
         <section key={day} className="space-y-2">
-          <h2 className="font-semibold">{DAYS[day].label}</h2>
+          <h2 className="heading text-xl">{DAYS[day].label}</h2>
           {state.games
             .filter((g) => g.day === day && g.court === court)
             .sort((a, b) => a.sort - b.sort)

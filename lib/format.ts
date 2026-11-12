@@ -12,11 +12,8 @@ export function fmtDiff(n: number): string {
   return n > 0 ? `+${n}` : String(n);
 }
 
-export const DIV_STYLE: Record<Division, { badge: string; border: string; bg: string }> = {
-  W: { badge: 'bg-pink-600 text-white', border: 'border-pink-400', bg: 'bg-pink-50' },
-  S: { badge: 'bg-green-700 text-white', border: 'border-green-500', bg: 'bg-green-50' },
-  C: { badge: 'bg-blue-700 text-white', border: 'border-blue-500', bg: 'bg-blue-50' },
-};
+/** Division tag shown on game cards (navy and white theme – divisions are told apart by name, not colour). */
+export const DIV_TAG: Record<Division, string> = { W: 'Women', S: 'Social', C: 'Comp' };
 
 export const DIV_BY_SLUG: Record<string, Division> = { women: 'W', social: 'S', comp: 'C' };
 

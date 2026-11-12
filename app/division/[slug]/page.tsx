@@ -52,17 +52,17 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
   return (
     <div className="space-y-6">
       <AutoRefresh />
-      <h1 className="text-xl font-bold">{DIVISIONS[division].name}</h1>
+      <h1 className="heading text-[30px]">{DIVISIONS[division].name}</h1>
 
       {anyPlaced && (
         <section>
-          <h2 className="mb-2 font-semibold">Final placings</h2>
-          <ol className="overflow-hidden rounded-lg bg-white text-sm shadow-sm">
+          <h2 className="heading mb-2 text-xl">Final placings</h2>
+          <ol className="card text-sm">
             {placings.map((p, i) => (
               <li key={i} className="flex gap-3 border-t px-3 py-1.5 first:border-t-0">
                 <span className="w-10 font-semibold">{p.place}</span>
-                <span className={p.teamId ? '' : 'italic text-slate-400'}>{p.teamId ? names[p.teamId] : 'TBC'}</span>
-                {p.note && p.teamId && <span className="ml-auto text-xs text-slate-500">{p.note}</span>}
+                <span className={p.teamId ? '' : 'italic text-ink-muted'}>{p.teamId ? names[p.teamId] : 'TBC'}</span>
+                {p.note && p.teamId && <span className="ml-auto text-xs text-ink-muted">{p.note}</span>}
               </li>
             ))}
           </ol>
@@ -70,8 +70,8 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
       )}
 
       <section>
-        <h2 className="mb-2 font-semibold">Pool standings</h2>
-        <p className="mb-2 text-xs text-slate-500">
+        <h2 className="heading mb-2 text-xl">Pool standings</h2>
+        <p className="mb-2 text-xs text-ink-muted">
           Ranked by wins, then competition points (win 3, loss after winning a set 1, straight-set loss 0), then rally
           points +/-. Exact ties are decided by the organiser. Only final games count.
         </p>
@@ -84,12 +84,12 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
 
       {division === 'C' && (
         <section>
-          <h2 className="mb-2 font-semibold">
-            Playoff seeding {!state.seeding.ready && <span className="text-sm font-normal text-slate-500">(provisional)</span>}
+          <h2 className="heading mb-2 text-xl">
+            Playoff seeding {!state.seeding.ready && <span className="text-sm font-normal text-ink-muted">(provisional)</span>}
           </h2>
-          <div className="overflow-x-auto rounded-lg bg-white shadow-sm">
+          <div className="card overflow-x-auto">
             <table className="tabular w-full text-sm">
-              <thead className="bg-slate-50 text-xs text-slate-500">
+              <thead className="bg-mist text-xs text-ink-muted">
                 <tr>
                   <th className="px-2 py-1 text-left">Seed</th>
                   <th className="px-2 py-1 text-left">Team</th>
@@ -101,7 +101,7 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
               </thead>
               <tbody>
                 {state.seeding.rows.map((r) => (
-                  <tr key={r.seed} className={`border-t ${r.seed === 9 ? 'border-t-2 border-t-slate-400' : ''}`}>
+                  <tr key={r.seed} className={`border-t ${r.seed === 9 ? 'border-t-2 border-t-navy' : ''}`}>
                     <td className="px-2 py-1.5 font-semibold">{r.seed}</td>
                     <td className="px-2 py-1.5">
                       {r.teamId ? (
@@ -121,18 +121,18 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
               </tbody>
             </table>
           </div>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-ink-muted">
             Seeds 1–8 play quarter-finals (1v8, 2v7, 3v6, 4v5). Seeds 9–12 play 9th–12th semis (9v12, 10v11).
           </p>
         </section>
       )}
 
       <section>
-        <h2 className="mb-2 font-semibold">Playoffs (Sunday)</h2>
+        <h2 className="heading mb-2 text-xl">Playoffs (Sunday)</h2>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {ROUNDS[division].map((round) => (
             <div key={round.title} className="w-72 shrink-0 space-y-2">
-              <h3 className="text-sm font-semibold text-slate-600">{round.title}</h3>
+              <h3 className="heading text-lg text-ink-muted">{round.title}</h3>
               {round.codes.map((code) => (
                 <GameCard key={code} game={state.gamesByCode[code]} />
               ))}
@@ -140,7 +140,7 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
         {division === 'C' && (
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-ink-muted">
             The 4pm 9th/10th and 11th/12th games are optional. If they aren&apos;t played, the 9th–12th semi winners share
             9th and the losers share 11th.
           </p>
@@ -148,7 +148,7 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
       </section>
 
       <section>
-        <h2 className="mb-2 font-semibold">Pool games</h2>
+        <h2 className="heading mb-2 text-xl">Pool games</h2>
         <div className="grid gap-2 sm:grid-cols-2">
           {poolGames.map((g) => (
             <GameCard key={g.code} game={g} showDay />

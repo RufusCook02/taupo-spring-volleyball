@@ -28,16 +28,16 @@ export default async function AdminLog() {
 
   return (
     <div className="space-y-3">
-      <h1 className="text-lg font-bold">Change log</h1>
-      <p className="text-sm text-slate-600">Latest 300 changes, newest first.</p>
+      <h1 className="heading text-[26px]">Change log</h1>
+      <p className="text-sm text-ink-muted">Latest 300 changes, newest first.</p>
       {error && <p className="rounded bg-red-100 p-2 text-sm text-red-800">{error.message}</p>}
       <ul className="space-y-2">
         {(data ?? []).map((r) => (
-          <li key={r.id} className="rounded-lg bg-white p-3 text-sm shadow-sm">
-            <div className="flex flex-wrap gap-x-2 text-xs text-slate-600">
+          <li key={r.id} className="card p-3 text-sm">
+            <div className="flex flex-wrap gap-x-2 text-xs text-ink-muted">
               <span>{fmtNz(r.at)}</span>
               <span>{r.user_email ?? 'system'}</span>
-              <span className="ml-auto font-semibold text-slate-900">
+              <span className="ml-auto font-semibold text-navy">
                 {r.table_name} {r.row_key} · {r.action}
               </span>
             </div>

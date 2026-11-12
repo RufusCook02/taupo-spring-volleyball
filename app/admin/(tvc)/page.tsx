@@ -7,9 +7,9 @@ import { buildState } from '@/lib/tournament/state';
 import { requireAdmin } from '@/lib/supabase/server';
 
 const STATUS_CLS = {
-  scheduled: 'bg-slate-200 text-slate-700',
-  in_progress: 'bg-red-600 text-white',
-  final: 'bg-slate-800 text-white',
+  scheduled: 'bg-mist text-ink-muted',
+  in_progress: 'bg-live text-white',
+  final: 'bg-navy text-white',
 };
 
 export default async function AdminScores({
@@ -28,7 +28,7 @@ export default async function AdminScores({
     <Link
       key={href}
       href={href}
-      className={`rounded-full px-3 py-2 text-sm ${active ? 'bg-slate-900 text-white' : 'bg-white'}`}
+      className={`rounded-full px-3 py-2 text-sm ${active ? 'bg-navy text-white' : 'bg-white'}`}
     >
       {label}
     </Link>
@@ -66,10 +66,10 @@ export default async function AdminScores({
             <li key={g.code}>
               <Link
                 href={`/admin/game/${g.code}`}
-                className={`block rounded-lg bg-white p-3 shadow-sm ${sp.saved === g.code ? 'ring-2 ring-green-500' : ''}`}
+                className={`block card p-3 ${sp.saved === g.code ? 'ring-2 ring-green-500' : ''}`}
               >
-                <div className="flex items-center gap-2 text-xs text-slate-600">
-                  <strong className="text-slate-900">{g.code}</strong>
+                <div className="flex items-center gap-2 text-xs text-ink-muted">
+                  <strong className="text-navy">{g.code}</strong>
                   <span>
                     {fmtTime(g.time)} · Ct {g.court} · {g.label}
                   </span>
@@ -81,7 +81,7 @@ export default async function AdminScores({
                   <span className={g.winner === 1 ? 'font-bold' : ''}>{g.t1.label}</span> v{' '}
                   <span className={g.winner === 2 ? 'font-bold' : ''}>{g.t2.label}</span>
                 </div>
-                {sets && <div className="tabular text-sm text-slate-600">{sets}</div>}
+                {sets && <div className="tabular text-sm text-ink-muted">{sets}</div>}
               </Link>
             </li>
           );

@@ -28,23 +28,23 @@ export default async function AdminGame({ params }: { params: Promise<{ code: st
 
   return (
     <div className="space-y-4">
-      <Link href={`/admin?day=${g.day}&court=${g.court}`} className="text-sm text-blue-700 underline">
+      <Link href={`/admin?day=${g.day}&court=${g.court}`} className="text-sm underline">
         ← Back to court {g.court}
       </Link>
       <div>
-        <h1 className="text-lg font-bold">
+        <h1 className="heading text-[26px]">
           {g.code} · {g.label}
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-ink-muted">
           {DAYS[g.day].short} {fmtTime(g.time)} · Court {g.court} · Duty: {g.dutySlot.label}
           {g.updatedAt && ` · Last saved ${fmtNz(g.updatedAt)}`}
         </p>
         {g.stage === 'playoff' && !['C19', 'C20', 'C21', 'C22'].includes(g.code) && (
-          <p className="text-xs text-slate-500">Playoff: no time limit, one 20-second timeout per team per set.</p>
+          <p className="text-xs text-ink-muted">Playoff: no time limit, one 20-second timeout per team per set.</p>
         )}
       </div>
 
-      <section className="rounded-lg bg-white p-3 shadow-sm">
+      <section className="card p-3">
         {g.t1.teamId && g.t2.teamId ? null : (
           <p className="mb-2 rounded bg-amber-50 p-2 text-xs text-amber-900">
             Teams aren&apos;t confirmed yet. You can still enter a score, or set the teams below.
@@ -59,9 +59,9 @@ export default async function AdminGame({ params }: { params: Promise<{ code: st
         </form>
       </section>
 
-      <section className="rounded-lg bg-white p-3 shadow-sm">
-        <h2 className="mb-1 font-semibold">Teams for this game</h2>
-        <p className="mb-2 text-xs text-slate-500">
+      <section className="card p-3">
+        <h2 className="heading mb-1 text-xl">Teams for this game</h2>
+        <p className="mb-2 text-xs text-ink-muted">
           Normally automatic from the draw. Override only if the organiser has decided otherwise (e.g. after a tie-break or a
           forfeit).
         </p>

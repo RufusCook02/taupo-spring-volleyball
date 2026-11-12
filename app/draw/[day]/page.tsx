@@ -24,16 +24,16 @@ export default async function DrawPage({ params }: { params: Promise<{ day: stri
   return (
     <div className="space-y-4">
       <AutoRefresh />
-      <h1 className="text-xl font-bold">{DAYS[day].label}</h1>
+      <h1 className="heading text-[30px]">{DAYS[day].label}</h1>
       {day === 'sun' && (
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-ink-muted">
           Playoff teams fill in as results come through. Times after the quarter-finals are targets – playoffs have no time
           limit.
         </p>
       )}
       {TIMES(day).map((time) => (
         <section key={time}>
-          <h2 className="mb-2 font-semibold">{fmtTime(time)}</h2>
+          <h2 className="heading mb-2 text-xl">{fmtTime(time)}</h2>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {games
               .filter((g) => g.time === time)
