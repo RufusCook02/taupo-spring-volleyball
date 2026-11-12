@@ -10,5 +10,8 @@ next-env.d.ts
 .env.local
 .env.*.local
 
+# Dev-only simulated clock for dry runs (see lib/clock.ts)
+.dryrun-clock
+
 # Office lock files
 ~$*

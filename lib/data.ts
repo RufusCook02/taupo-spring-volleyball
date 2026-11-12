@@ -2,6 +2,7 @@ import 'server-only';
 import { cache } from 'react';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { DEFAULT_TEAMS, type TeamDef } from '@/data/draw';
+import { appNow } from '@/lib/clock';
 import { withAutoLive } from '@/lib/tournament/now';
 import { buildState } from '@/lib/tournament/state';
 import type { OverrideRow, RawData, ScoreRow, TiebreakRow, TournamentState } from '@/lib/tournament/types';
@@ -37,6 +38,6 @@ const EMPTY: RawData = { teams: DEFAULT_TEAMS, scores: [], overrides: [], tiebre
 
 /** State for public pages. Without Supabase configured (local preview) shows the draw with no scores. */
 export const getPublicState = cache(async (): Promise<TournamentState> => {
-  if (!supabaseConfigured()) return withAutoLive(buildState(EMPTY));
-  return withAutoLive(buildState(await loadRaw(publicClient())));
+  if (!supabaseConfigured()) return withAutoLive(buildState(EMPTY), appNow());
+  return withAutoLive(buildState(await loadRaw(publicClient())), appNow());
 });

@@ -3,6 +3,7 @@ import { DAYS, DIVISIONS } from '@/data/draw';
 import AutoRefresh from '@/components/AutoRefresh';
 import GameCard from '@/components/GameCard';
 import MyTeam, { type LiteGame, type LiteTeam } from '@/components/MyTeam';
+import { appNow } from '@/lib/clock';
 import { getPublicState } from '@/lib/data';
 import { fmtTime } from '@/lib/format';
 import { courtsNow, currentDay } from '@/lib/tournament/now';
@@ -11,7 +12,7 @@ export const revalidate = 15;
 
 export default async function Home() {
   const state = await getPublicState();
-  const day = currentDay(state.games);
+  const day = currentDay(state.games, appNow());
   const courts = courtsNow(state.games, day);
   const allDone = state.games.filter((g) => !g.optional).every((g) => g.status === 'final');
 
@@ -23,6 +24,7 @@ export default async function Home() {
     court: g.court,
     sort: g.sort,
     status: g.status,
+    winner: g.winner,
     t1: { id: g.t1.teamId, label: g.t1.label },
     t2: { id: g.t2.teamId, label: g.t2.label },
     duty: { id: g.dutySlot.teamId, label: g.dutySlot.label },

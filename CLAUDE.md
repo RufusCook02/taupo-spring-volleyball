@@ -2,6 +2,13 @@
 
 Tournament: Saturday 14 and Sunday 15 November 2026, 4 courts, 28 teams in three divisions (Women, Social, Competitive).
 
+## ⚠️ The site is live
+The site is in production and in use. Every push to `main` deploys straight to the public site and TVC score entry, so changes must be non-breaking:
+- Run `npx tsc --noEmit` and the tests, and check the change in the browser (including at phone width), before it goes to `main`.
+- No schema or data changes that break existing scores, team names, overrides or the change log. Any database change must be additive and backwards compatible.
+- Don't change scoring, standings, seeding or placeholder logic during the tournament unless it fixes a confirmed bug, and check it against the Calc sheet.
+- Keep changes small and easy to revert.
+
 ## Goal
 A simple, mobile-first website where:
 - **The public** (players, spectators) can view the draw by day, court and division, see live and final scores, see pool standings, and follow the playoff brackets. Read-only, no login.

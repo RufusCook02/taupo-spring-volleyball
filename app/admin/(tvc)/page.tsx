@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { COURTS, DAYS, type Day } from '@/data/draw';
 import { loadRaw } from '@/lib/data';
 import { fmtTime } from '@/lib/format';
+import { appNow } from '@/lib/clock';
 import { blockersFor } from '@/lib/tournament/blockers';
 import { autoLiveCodes, currentDay, minutesUntilStart, nzClock } from '@/lib/tournament/now';
 import { buildState } from '@/lib/tournament/state';
@@ -22,9 +23,10 @@ export default async function AdminScores({
   const { supabase } = await requireAdmin();
   const state = buildState(await loadRaw(supabase));
   const sp = await searchParams;
-  const day: Day = sp.day === 'sat' || sp.day === 'sun' ? sp.day : currentDay(state.games);
+  const now = appNow();
+  const day: Day = sp.day === 'sat' || sp.day === 'sun' ? sp.day : currentDay(state.games, now);
   const court = COURTS.find((c) => String(c) === sp.court) ?? null;
-  const autoLive = autoLiveCodes(state.games);
+  const autoLive = autoLiveCodes(state.games, now);
   const games = state.games.filter((g) => g.day === day && (!court || g.court === court));
 
   const chip = (href: string, label: string, active: boolean) => (
@@ -45,7 +47,7 @@ export default async function AdminScores({
           (g) =>
             (g.status === 'scheduled' || g.status === 'delayed') &&
             (!g.t1.teamId || !g.t2.teamId) &&
-            minutesUntilStart(g, nzClock()) <= 60 &&
+            minutesUntilStart(g, nzClock(now)) <= 60 &&
             blockersFor(state, g.code).games.length > 0,
         );
         return soon.length > 0 ? (

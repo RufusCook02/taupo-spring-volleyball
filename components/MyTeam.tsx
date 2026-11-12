@@ -15,6 +15,7 @@ export interface LiteGame {
   court: number;
   sort: number;
   status: 'scheduled' | 'delayed' | 'in_progress' | 'final';
+  winner: 1 | 2 | null;
   t1: LiteSlot;
   t2: LiteSlot;
   duty: LiteSlot;
@@ -70,7 +71,7 @@ export default function MyTeam({ games, teams }: { games: LiteGame[]; teams: Lit
     return (
       <section className="card p-3">
         <h2 className="heading mb-1 text-xl">Follow your team</h2>
-        <p className="mb-2 text-sm text-ink-muted">See your next game and duty here. Remembered on this phone.</p>
+        <p className="mb-2 text-sm text-ink-muted">See all your games and duties here. Remembered on this phone.</p>
         <select
           className="w-full rounded border border-rule bg-white p-3 text-base"
           defaultValue=""
@@ -97,10 +98,20 @@ export default function MyTeam({ games, teams }: { games: LiteGame[]; teams: Lit
   }
 
   const team = teams.find((t) => t.id === teamId)!;
-  const sorted = [...games].sort((a, b) => a.sort - b.sort);
-  const nextGame = sorted.find((g) => g.status !== 'final' && (g.t1.id === teamId || g.t2.id === teamId));
-  const nextDuty = sorted.find((g) => g.status !== 'final' && g.duty.id === teamId);
+  const plays = (g: LiteGame) => g.t1.id === teamId || g.t2.id === teamId;
+  // Every game the team plays or referees, in draw order.
+  const items = [...games]
+    .sort((a, b) => a.sort - b.sort)
+    .filter((g) => plays(g) || g.duty.id === teamId)
+    .map((g) => ({ game: g, kind: plays(g) ? ('play' as const) : ('duty' as const) }));
+  const next = items.find((i) => i.game.status !== 'final');
   const opp = (g: LiteGame) => (g.t1.id === teamId ? g.t2.label : g.t1.label);
+  const result = (g: LiteGame) => {
+    if (g.status !== 'final' || g.winner === null) return null;
+    const won = (g.winner === 1 ? g.t1.id : g.t2.id) === teamId;
+    return won ? 'Won' : 'Lost';
+  };
+  const hasSunday = items.some((i) => i.game.day === 'sun' && i.kind === 'play');
 
   return (
     <section className="card">
@@ -110,38 +121,37 @@ export default function MyTeam({ games, teams }: { games: LiteGame[]; teams: Lit
           Change team
         </button>
       </div>
-      <dl className="divide-y divide-rule text-[15px]">
-        <div className="flex gap-3 px-3 py-2">
-          <dt className="w-14 shrink-0 font-cond font-extrabold uppercase text-ink-muted">Play</dt>
-          <dd className="min-w-0">
-            {nextGame ? (
-              <>
-                <span className={`font-semibold ${nextGame.status === 'in_progress' ? 'text-live' : ''}`}>{when(nextGame)}</span>
-                <span className="block truncate">
-                  {nextGame.code} v {opp(nextGame)}
+      <ul className="divide-y divide-rule text-[15px]">
+        {items.map(({ game: g, kind }) => {
+          const done = g.status === 'final';
+          const isNext = next?.game === g;
+          const res = kind === 'play' ? result(g) : null;
+          return (
+            <li
+              key={`${kind}-${g.code}`}
+              className={`flex gap-3 px-3 py-2 ${done ? 'text-ink-muted' : ''} ${isNext ? 'bg-mist' : ''}`}
+            >
+              <span className="w-14 shrink-0 font-cond font-extrabold uppercase text-ink-muted">
+                {kind === 'play' ? 'Play' : 'Duty'}
+              </span>
+              <div className="min-w-0">
+                <span className={`font-semibold ${g.status === 'in_progress' ? 'text-live' : ''}`}>
+                  {when(g)}
+                  {isNext && <span className="ml-2 text-xs font-normal text-ink-muted">(up next)</span>}
+                  {res && <span className="ml-2 text-xs font-normal">{res}</span>}
+                  {kind === 'duty' && done && <span className="ml-2 text-xs font-normal">Done</span>}
                 </span>
-              </>
-            ) : (
-              <span className="text-ink-muted">No more games known yet. Sunday games appear as results come in.</span>
-            )}
-          </dd>
-        </div>
-        <div className="flex gap-3 px-3 py-2">
-          <dt className="w-14 shrink-0 font-cond font-extrabold uppercase text-ink-muted">Duty</dt>
-          <dd className="min-w-0">
-            {nextDuty ? (
-              <>
-                <span className="font-semibold">{when(nextDuty)}</span>
                 <span className="block truncate">
-                  Ref {nextDuty.code}: {nextDuty.t1.label} v {nextDuty.t2.label}
+                  {kind === 'play' ? `${g.code} v ${opp(g)}` : `Ref ${g.code}: ${g.t1.label} v ${g.t2.label}`}
                 </span>
-              </>
-            ) : (
-              <span className="text-ink-muted">No duty coming up.</span>
-            )}
-          </dd>
-        </div>
-      </dl>
+              </div>
+            </li>
+          );
+        })}
+        {!hasSunday && (
+          <li className="px-3 py-2 text-sm text-ink-muted">Sunday games appear here as the results that decide them come in.</li>
+        )}
+      </ul>
       <div className="flex gap-4 bg-mist px-3 py-2 text-sm">
         <Link href={`/team/${teamId}`} className="font-semibold underline">
           Full schedule

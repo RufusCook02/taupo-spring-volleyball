@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { DAYS } from '@/data/draw';
+import { appNow } from '@/lib/clock';
 import { loadRaw } from '@/lib/data';
 import { fmtTime } from '@/lib/format';
 import { blockersFor } from '@/lib/tournament/blockers';
@@ -16,7 +17,8 @@ const fmtDur = (m: number) => (m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${
 export default async function Dashboard() {
   const { supabase } = await requireAdmin();
   const state = buildState(await loadRaw(supabase));
-  const clock = nzClock();
+  const now = appNow();
+  const clock = nzClock(now);
 
   const waiting = state.games
     .filter((g) => (g.status === 'scheduled' || g.status === 'delayed') && (!g.t1.teamId || !g.t2.teamId))
@@ -40,7 +42,7 @@ export default async function Dashboard() {
             weekday: 'short',
             hour: 'numeric',
             minute: '2-digit',
-          }).format(new Date())}{' '}
+          }).format(now)}{' '}
           NZ time · refresh the page to update
         </p>
       </div>
