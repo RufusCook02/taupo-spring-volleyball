@@ -5,6 +5,7 @@ import type { ResolvedGame, ResolvedSlot } from '@/lib/tournament/types';
 
 const STATUS: Record<ResolvedGame['status'], { text: string; cls: string }> = {
   scheduled: { text: 'Scheduled', cls: 'bg-mist text-ink-muted' },
+  delayed: { text: 'Delayed', cls: 'bg-amber-400 text-navy' },
   in_progress: { text: 'LIVE', cls: 'bg-live text-white' },
   final: { text: 'Final', cls: 'bg-navy text-white' },
 };

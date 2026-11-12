@@ -1,4 +1,5 @@
 export const metadata = { title: 'Rules' };
+export const revalidate = 60; // keeps the announcement banner current
 
 // From the Rules sheet of Taupo_Spring_Volleyball_2026.xlsx, plus TVC's ruling on level totals at a set-2 time-out.
 const SECTIONS: { title: string; items: React.ReactNode[] }[] = [

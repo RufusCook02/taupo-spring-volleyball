@@ -1,7 +1,8 @@
 import type { Division, GameDef, TeamDef } from '@/data/draw';
 import type { GameResult, SetScores } from './result';
 
-export type GameStatus = 'scheduled' | 'in_progress' | 'final';
+/** 'delayed' = TVC has held the game back; it won't be shown as live automatically when its start time passes. */
+export type GameStatus = 'scheduled' | 'delayed' | 'in_progress' | 'final';
 export type Slot = 'team1' | 'team2' | 'duty';
 
 export interface ScoreRow extends SetScores {
@@ -27,6 +28,8 @@ export interface RawData {
   scores: ScoreRow[];
   overrides: OverrideRow[];
   tiebreaks: TiebreakRow[];
+  /** public banner text set by TVC; none by default */
+  announcement?: string | null;
 }
 
 export interface ResolvedSlot {
@@ -48,6 +51,8 @@ export interface ResolvedGame extends GameDef {
   /** 1 or 2 once the game is final */
   winner: 1 | 2 | null;
   updatedAt: string | null;
+  /** shown as in progress because its start time passed (stored status is still 'scheduled') */
+  autoLive?: boolean;
 }
 
 export interface StandingRow {
@@ -118,4 +123,5 @@ export interface TournamentState {
   seeding: Seeding;
   placings: Record<Division, Placing[]>;
   tieIssues: TieIssue[];
+  announcement: string | null;
 }

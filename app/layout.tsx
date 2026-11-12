@@ -4,6 +4,7 @@ import Link from 'next/link';
 import fs from 'node:fs';
 import path from 'node:path';
 import NavLinks from '@/components/NavLinks';
+import { getPublicState } from '@/lib/data';
 import './globals.css';
 
 // Fonts are downloaded at build time and served from the site itself (no runtime call to Google).
@@ -30,7 +31,16 @@ export const viewport: Viewport = {
   themeColor: '#0B2559',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+async function getAnnouncement(): Promise<string | null> {
+  try {
+    return (await getPublicState()).announcement;
+  } catch {
+    return null; // never let the banner take the page down
+  }
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const announcement = await getAnnouncement();
   return (
     <html lang="en-NZ" className={`${barlow.variable} ${barlowCond.variable}`}>
       <body className="min-h-screen">
@@ -64,6 +74,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <NavLinks />
           </div>
         </nav>
+        {announcement && (
+          <div role="status" className="bg-amber-400 text-navy">
+            <p className="mx-auto max-w-5xl px-4 py-2.5 text-[15px] font-semibold">
+              <span className="heading mr-2 text-base">Notice</span>
+              {announcement}
+            </p>
+          </div>
+        )}
         <main className="mx-auto max-w-5xl px-4 py-5">{children}</main>
         <footer className="mx-auto max-w-5xl px-4 pb-8 pt-4 text-xs text-ink-muted">
           Run by Taupō Volleyball Club. Scores are entered by TVC and update automatically.{' '}

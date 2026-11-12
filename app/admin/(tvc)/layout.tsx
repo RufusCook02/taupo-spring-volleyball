@@ -13,9 +13,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <strong>TVC admin</strong>
         <nav className="flex flex-wrap gap-1">
           {[
+            ['/admin/dashboard', 'Dashboard'],
             ['/admin', 'Scores'],
-            ['/admin/teams', 'Team names'],
+            ['/admin/announcement', 'Announcement'],
             ['/admin/ties', 'Ties'],
+            ['/admin/results', 'Results'],
+            ['/admin/teams', 'Team names'],
             ['/admin/log', 'Change log'],
           ].map(([href, label]) => (
             <Link key={href} href={href} className="rounded bg-white px-2 py-1">

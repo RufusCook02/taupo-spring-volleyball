@@ -59,7 +59,8 @@ describe('pool standings', () => {
     const st = buildState(raw(scores));
     expect(st.pools.CC.complete).toBe(false);
     expect(st.seeding.poolsComplete).toBe(false);
-    expect(st.gamesByCode.C19.t1.label).toBe('Seed 1');
+    expect(st.gamesByCode.C19.t1.label).toBe('Best pool winner');
+    expect(st.gamesByCode.C19.t1.source).toBe('Seed 1');
   });
 
   it('flags an exact three-way tie and waits for the organiser', () => {
@@ -74,7 +75,7 @@ describe('pool standings', () => {
     expect(st.tieIssues.map((t) => t.scope)).toContain('pool:WA');
     // Pool A 1st unresolved; Pool A 4th still resolves
     expect(st.gamesByCode.W15.t1.teamId).toBeNull();
-    expect(st.gamesByCode.W15.t1.label).toBe('Pool A 1st');
+    expect(st.gamesByCode.W15.t1.label).toBe('Pool A winner');
     expect(st.gamesByCode.W14.t2.teamId).toBe('WA4');
 
     // Organiser decides WA2, WA3, WA1
@@ -134,7 +135,7 @@ describe('playoff placeholders', () => {
     expect(st.gamesByCode.W18.t1.teamId).toBe('WB4'); // Winner W13
     expect(st.gamesByCode.W18.t2.teamId).toBe('WB3'); // Winner W14
     expect(st.gamesByCode.W15.dutySlot.teamId).toBe('WA3'); // Loser W13 on duty
-    expect(st.gamesByCode.W20.t1.label).toBe('Winner W15');
+    expect(st.gamesByCode.W20.t1.label).toBe('Winner of W15 (WFA women’s v TVC Lakers)');
   });
 
   it('in-progress games do not resolve placeholders', () => {

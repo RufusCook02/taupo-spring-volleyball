@@ -32,7 +32,7 @@ npm test
 
 ### 2. Supabase
 1. Create a project at https://supabase.com (region: **Sydney**).
-2. Schema: the Supabase GitHub integration applies [`supabase/migrations/`](supabase/migrations) when you push to `main`. Without the integration, run [`supabase/migrations/20261112000000_init.sql`](supabase/migrations/20261112000000_init.sql) in **SQL Editor** (it's safe to run twice). Then run [`supabase/seed.sql`](supabase/seed.sql) in **SQL Editor** to load team names.
+2. Schema: the Supabase GitHub integration applies [`supabase/migrations/`](supabase/migrations) when you push to `main`. Without the integration, run [`supabase/migrations/20261112000000_init.sql`](supabase/migrations/20261112000000_init.sql) in **SQL Editor** (it's safe to run twice). Then run [`supabase/seed.sql`](supabase/seed.sql) in **SQL Editor** to load team names. Also run [`supabase/migrations/20261113000000_announcement.sql`](supabase/migrations/20261113000000_announcement.sql) for the announcement banner.
 3. **Authentication → Sign In / Providers**: keep Email enabled, **turn off "Allow new users to sign up"**.
 4. **Authentication → Users → Add user → Create new user** for each TVC scorer (tick *Auto confirm*). Give each person their own login and share passwords privately, not in chat or email threads.
 5. Make them admins – **SQL Editor**:
@@ -69,6 +69,9 @@ Open http://localhost:3000 (public) and http://localhost:3000/admin (TVC). Witho
 
 ## Weekend runbook
 
+- **Dashboard (Admin → Dashboard):** which upcoming games are still waiting on results (and exactly which games to mark Final or ties to decide), plus games not marked Final an hour after their start time.
+- **Announcement (Admin → Announcement):** a short notice at the top of every public page. Clear it when it's no longer needed.
+- **Results (Admin → Results):** final placings and pool winners for all divisions on one page – screenshot for Facebook.
 - **Enter a score:** Admin → pick day/court → tap the game → type set scores → status **Final** → Save. Use **In progress** to show a game as LIVE while it's being played.
 - **Time ran out in set 2:** enter sets 1 and 2 as played, leave set 3 blank – total points decide. Level totals: if the extra point was played, add it to the set 2 score; if it wasn't, the set 1 winner wins automatically.
 - **Time ran out in set 3:** enter the set 3 score at the buzzer; whoever is ahead wins. A level set 3 can't be saved as Final – add the extra point first.

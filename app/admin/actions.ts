@@ -12,7 +12,7 @@ export interface ActionState {
   ok?: string;
 }
 
-const STATUSES: GameStatus[] = ['scheduled', 'in_progress', 'final'];
+const STATUSES: GameStatus[] = ['scheduled', 'delayed', 'in_progress', 'final'];
 const SLOTS: Slot[] = ['team1', 'team2', 'duty'];
 const TEAM_IDS = new Set(DEFAULT_TEAMS.map((t) => t.id));
 
@@ -77,10 +77,15 @@ export async function saveScore(_: ActionState, form: FormData): Promise<ActionS
   if (status === 'final' && vals.s3a != null && vals.s3a === vals.s3b) {
     return { error: 'Set 3 is level. Teams play one more point – add it to the set 3 score, then save as Final.' };
   }
-  if (status === 'scheduled' && r.played) status = 'in_progress';
+  if ((status === 'scheduled' || status === 'delayed') && r.played) status = 'in_progress';
 
   const { error } = await supabase.from('scores').upsert({ game_code: code, ...vals, status });
-  if (error) return { error: `Save failed: ${error.message}` };
+  if (error) {
+    if (status === 'delayed' && /status_check/.test(error.message)) {
+      return { error: 'Delayed isn’t enabled yet – run supabase/migrations/20261113000100_delayed_status.sql in Supabase.' };
+    }
+    return { error: `Save failed: ${error.message}` };
+  }
   refreshPublic();
   redirect(`/admin?day=${game.day}&court=${game.court}&saved=${code}`);
 }
@@ -130,6 +135,25 @@ export async function renameTeam(_: ActionState, form: FormData): Promise<Action
   if (!count) return { error: 'Team not found in the database – run supabase/seed.sql.' };
   refreshPublic();
   return { ok: `Saved “${name}”.` };
+}
+
+// ---------- announcement ----------
+
+export async function saveAnnouncement(_: ActionState, form: FormData): Promise<ActionState> {
+  const { supabase } = await requireAdmin();
+  const clear = form.get('clear') === '1';
+  const message = clear ? '' : String(form.get('message') ?? '').trim().replace(/\s+/g, ' ');
+  if (message.length > 280) return { error: 'Keep it to 280 characters.' };
+  const { error } = await supabase.from('announcement').upsert({ id: 1, message: message || null });
+  if (error) {
+    return {
+      error: /announcement/.test(error.message)
+        ? 'The announcement table is missing – run supabase/migrations/20261113000000_announcement.sql in Supabase.'
+        : `Save failed: ${error.message}`,
+    };
+  }
+  refreshPublic();
+  return { ok: message ? 'Announcement is showing on the public pages.' : 'Announcement cleared.' };
 }
 
 // ---------- tie-breaks ----------

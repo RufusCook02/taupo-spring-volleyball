@@ -91,9 +91,14 @@ export function buildState(raw: RawData): TournamentState {
   function slotInfo(def: GameDef, slot: Slot): ResolvedSlot {
     const source = slot === 'team1' ? def.team1 : slot === 'team2' ? def.team2 : def.duty;
     const teamId = resolveSlotId(def.code, slot);
+    const teamsOf = (code: string): [string | null, string | null] => {
+      const a = resolveSlotId(code, 'team1');
+      const b = resolveSlotId(code, 'team2');
+      return [a ? name(a) : null, b ? name(b) : null];
+    };
     return {
       teamId,
-      label: teamId ? name(teamId) : source.startsWith('spot:') ? source.slice(5) : source,
+      label: teamId ? name(teamId) : describeSource(source, teamsOf),
       source,
       overridden: overrides.has(`${def.code}:${slot}`),
     };
@@ -129,7 +134,43 @@ export function buildState(raw: RawData): TournamentState {
     seeding,
     placings: computePlacings(gamesByCode),
     tieIssues: tieIssues(pools, seeding),
+    announcement: raw.announcement?.trim() || null,
   };
+}
+
+// ---- plain-English placeholder labels ----
+
+const SEED_LABELS = [
+  'Best pool winner',
+  '2nd-best pool winner',
+  '3rd-best pool winner',
+  'Best 2nd place',
+  '2nd-best 2nd place',
+  '3rd-best 2nd place',
+  'Best 3rd place',
+  '2nd-best 3rd place',
+  '3rd-best 3rd place',
+  'Best 4th place',
+  '2nd-best 4th place',
+  '3rd-best 4th place',
+];
+
+/**
+ * Label for a slot that isn't decided yet, e.g. 'Seed 1' → 'Best pool winner',
+ * 'Winner C19' → 'Winner of C19 (Sharks v AC3)'. `teamsOf(code)` gives that game's team names if known.
+ */
+export function describeSource(src: string, teamsOf: (code: string) => [string | null, string | null]): string {
+  if (src.startsWith('spot:')) return src.slice(5);
+  let m = /^Pool ([ABC]) (1st|2nd|3rd|4th)$/.exec(src);
+  if (m) return m[2] === '1st' ? `Pool ${m[1]} winner` : `Pool ${m[1]} ${m[2]} place`;
+  m = /^Seed (\d+)$/.exec(src);
+  if (m) return SEED_LABELS[Number(m[1]) - 1] ?? src;
+  m = /^(Winner|Loser) (\w+)$/.exec(src);
+  if (m) {
+    const [a, b] = teamsOf(m[2]);
+    return `${m[1]} of ${m[2]}${a && b ? ` (${a} v ${b})` : ''}`;
+  }
+  return src;
 }
 
 // ---- final placings ----

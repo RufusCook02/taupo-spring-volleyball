@@ -50,7 +50,7 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="space-y-6">
-      <AutoRefresh />
+      <AutoRefresh generatedAt={new Date().toISOString()} />
       <h1 className="heading text-[30px]">{DIVISIONS[division].name}</h1>
 
       {anyPlaced && (

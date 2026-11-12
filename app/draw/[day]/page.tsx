@@ -23,7 +23,7 @@ export default async function DrawPage({ params }: { params: Promise<{ day: stri
 
   return (
     <div className="space-y-4">
-      <AutoRefresh />
+      <AutoRefresh generatedAt={new Date().toISOString()} />
       <h1 className="heading text-[30px]">{DAYS[day].label}</h1>
       {day === 'sun' && (
         <p className="text-sm text-ink-muted">

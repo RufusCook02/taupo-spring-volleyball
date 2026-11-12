@@ -4,7 +4,6 @@ import { COURTS, DAYS, type Day } from '@/data/draw';
 import AutoRefresh from '@/components/AutoRefresh';
 import GameCard from '@/components/GameCard';
 import { getPublicState } from '@/lib/data';
-
 export const revalidate = 15;
 export const dynamicParams = false;
 export const generateStaticParams = () => COURTS.map((n) => ({ n: String(n) }));
@@ -20,7 +19,7 @@ export default async function CourtPage({ params }: { params: Promise<{ n: strin
 
   return (
     <div className="space-y-4">
-      <AutoRefresh />
+      <AutoRefresh generatedAt={new Date().toISOString()} />
       <div className="flex items-baseline gap-3">
         <h1 className="heading text-[30px]">Court {court}</h1>
         <nav className="flex gap-2 text-sm">

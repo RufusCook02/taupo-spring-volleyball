@@ -2,9 +2,18 @@
 
 import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { renameTeam, saveOverrides, saveScore, saveTiebreak, signIn, type ActionState } from '@/app/admin/actions';
+import {
+  renameTeam,
+  saveAnnouncement,
+  saveOverrides,
+  saveScore,
+  saveTiebreak,
+  signIn,
+  type ActionState,
+} from '@/app/admin/actions';
 import { gameResult, type SetScores } from '@/lib/tournament/result';
 import type { GameStatus } from '@/lib/tournament/types';
+import { scoreWarnings } from '@/lib/tournament/warnings';
 
 function Submit({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const { pending } = useFormStatus();
@@ -67,7 +76,10 @@ export function ScoreForm({
     Object.fromEntries(KEYS.map((k) => [k, initial[k] == null ? '' : String(initial[k])])),
   );
   const num = (k: (typeof KEYS)[number]) => (vals[k] === '' || isNaN(Number(vals[k])) ? null : Number(vals[k]));
-  const preview = gameResult({ s1a: num('s1a'), s1b: num('s1b'), s2a: num('s2a'), s2b: num('s2b'), s3a: num('s3a'), s3b: num('s3b') });
+  const current: SetScores = { s1a: num('s1a'), s1b: num('s1b'), s2a: num('s2a'), s2b: num('s2b'), s3a: num('s3a'), s3b: num('s3b') };
+  const preview = gameResult(current);
+  const [statusSel, setStatusSel] = useState<GameStatus>(status);
+  const warnings = scoreWarnings(current, statusSel);
 
   const input = (k: (typeof KEYS)[number]) => (
     <input
@@ -117,6 +129,15 @@ export function ScoreForm({
         </p>
       )}
 
+      {warnings.length > 0 && (
+        <ul className="space-y-1 rounded bg-amber-50 p-2 text-sm text-amber-900" aria-live="polite">
+          {warnings.map((w) => (
+            <li key={w}>⚠ {w}</li>
+          ))}
+          <li className="text-xs">Check the score sheet. You can still save if it&apos;s right.</li>
+        </ul>
+      )}
+
       <div className="rounded bg-mist p-2 text-sm">
         {preview.played ? (
           <>
@@ -134,17 +155,21 @@ export function ScoreForm({
         {(
           [
             ['scheduled', 'Scheduled'],
+            ['delayed', 'Delayed'],
             ['in_progress', 'In progress'],
             ['final', 'Final'],
           ] as const
         ).map(([v, label]) => (
           <label key={v} className="flex items-center gap-2 rounded border bg-white px-3 py-2">
-            <input type="radio" name="status" value={v} defaultChecked={status === v} />
+            <input type="radio" name="status" value={v} checked={statusSel === v} onChange={() => setStatusSel(v)} />
             {label}
           </label>
         ))}
       </fieldset>
-      <p className="text-xs text-ink-muted">Only Final games count for standings and fill in the next round.</p>
+      <p className="text-xs text-ink-muted">
+        Scheduled games show as live on the public site once their start time passes. Choose Delayed to stop that.
+        Only Final games count for standings and fill in the next round.
+      </p>
 
       <Message state={state} />
       <Submit className="w-full">Save score</Submit>
@@ -234,6 +259,43 @@ export function TiebreakForm({ scope, teams }: { scope: string; teams: { id: str
       ))}
       <Message state={state} />
       <Submit className="px-3 py-2 text-sm">Save order</Submit>
+    </form>
+  );
+}
+
+// ---------- announcement ----------
+
+export function AnnouncementForm({ current }: { current: string | null }) {
+  const [state, action] = useActionState(saveAnnouncement, {});
+  const [text, setText] = useState(current ?? '');
+  return (
+    <form action={action} className="space-y-3">
+      <label className="block text-sm">
+        Message shown at the top of every public page (max 280 characters)
+        <textarea
+          name="message"
+          maxLength={280}
+          rows={3}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="e.g. Court 3 is running about 20 minutes late"
+          className="mt-1 w-full rounded border p-3 text-base"
+        />
+      </label>
+      <p className="text-xs text-ink-muted">{280 - text.length} characters left</p>
+      <Message state={state} />
+      <div className="flex gap-2">
+        <Submit>Show announcement</Submit>
+        <button
+          type="submit"
+          name="clear"
+          value="1"
+          onClick={() => setText('')}
+          className="rounded-lg border border-red-300 px-4 py-3 text-sm text-red-700"
+        >
+          Clear
+        </button>
+      </div>
     </form>
   );
 }

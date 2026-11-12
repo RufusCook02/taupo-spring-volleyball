@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { DAYS } from '@/data/draw';
+import { DAYS, DIVISIONS } from '@/data/draw';
 import AutoRefresh from '@/components/AutoRefresh';
 import GameCard from '@/components/GameCard';
+import MyTeam, { type LiteGame, type LiteTeam } from '@/components/MyTeam';
 import { getPublicState } from '@/lib/data';
 import { fmtTime } from '@/lib/format';
 import { courtsNow, currentDay } from '@/lib/tournament/now';
@@ -14,9 +15,30 @@ export default async function Home() {
   const courts = courtsNow(state.games, day);
   const allDone = state.games.filter((g) => !g.optional).every((g) => g.status === 'final');
 
+  // Compact data for the "My team" card (runs in the browser).
+  const liteGames: LiteGame[] = state.games.map((g) => ({
+    code: g.code,
+    day: g.day,
+    time: g.time,
+    court: g.court,
+    sort: g.sort,
+    status: g.status,
+    t1: { id: g.t1.teamId, label: g.t1.label },
+    t2: { id: g.t2.teamId, label: g.t2.label },
+    duty: { id: g.dutySlot.teamId, label: g.dutySlot.label },
+  }));
+  const liteTeams: LiteTeam[] = state.teams.map((t) => ({
+    id: t.id,
+    name: t.name,
+    group: `${DIVISIONS[t.division].name} Pool ${t.pool}`,
+  }));
+
   return (
     <div className="space-y-5">
-      <AutoRefresh />
+      <AutoRefresh generatedAt={new Date().toISOString()} />
+
+      <MyTeam games={liteGames} teams={liteTeams} />
+
       <div className="flex items-end justify-between">
         <h1 className="heading text-[30px]">
           On court now <span className="font-semibold text-ink-muted">· {DAYS[day].short.slice(0, 3)}</span>
@@ -52,7 +74,7 @@ export default async function Home() {
             {next && (
               <Link href={`/court/${court}`} className="flex gap-2 bg-mist px-3 py-2 text-sm">
                 <b className="shrink-0 font-cond font-extrabold uppercase text-ink-muted">
-                  Next {fmtTime(next.time)}
+                  {next.status === 'delayed' ? 'Delayed' : `Next ${fmtTime(next.time)}`}
                 </b>
                 <span className="truncate">
                   {next.code}: {next.t1.label} v {next.t2.label}
@@ -62,17 +84,6 @@ export default async function Home() {
           </section>
         ))}
       </div>
-
-      <section className="card p-3 text-sm">
-        <h2 className="heading mb-1 text-xl">Find your team</h2>
-        <p>
-          Every game and duty time for your team is on the{' '}
-          <Link href="/teams" className="underline">
-            Teams
-          </Link>{' '}
-          page.
-        </p>
-      </section>
     </div>
   );
 }

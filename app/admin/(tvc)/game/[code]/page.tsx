@@ -22,6 +22,21 @@ export default async function AdminGame({ params }: { params: Promise<{ code: st
   const autoText = (slot: { label: string; source: string; teamId: string | null }) =>
     slot.teamId ? `${slot.label}${slot.source.startsWith('spot:') ? '' : ` (${slot.source})`}` : slot.label;
 
+  // Teams in this game that are also playing or on duty elsewhere at the same time (usually from an override).
+  const clashes = [g.t1, g.t2, g.dutySlot]
+    .filter((s) => s.teamId)
+    .flatMap((s) =>
+      state.games
+        .filter(
+          (o) =>
+            o.code !== g.code &&
+            o.day === g.day &&
+            o.time === g.time &&
+            [o.t1.teamId, o.t2.teamId, o.dutySlot.teamId].includes(s.teamId),
+        )
+        .map((o) => `${s.label} is also in ${o.code} (Court ${o.court}) at the same time.`),
+    );
+
   const teams = [...state.teams]
     .sort((a, b) => (a.division === g.division ? -1 : 0) - (b.division === g.division ? -1 : 0))
     .map((t) => ({ id: t.id, name: t.name, group: `${DIVISIONS[t.division].name} Pool ${t.pool}` }));
@@ -61,6 +76,13 @@ export default async function AdminGame({ params }: { params: Promise<{ code: st
 
       <section className="card p-3">
         <h2 className="heading mb-1 text-xl">Teams for this game</h2>
+        {clashes.length > 0 && (
+          <ul className="mb-2 rounded bg-red-50 p-2 text-sm text-red-900">
+            {clashes.map((c) => (
+              <li key={c}>⚠ {c}</li>
+            ))}
+          </ul>
+        )}
         <p className="mb-2 text-xs text-ink-muted">
           Normally automatic from the draw. Override only if the organiser has decided otherwise (e.g. after a tie-break or a
           forfeit).
