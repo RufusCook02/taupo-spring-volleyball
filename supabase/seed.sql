@@ -1,0 +1,32 @@
+-- Seed team names from the Teams sheet of Taupo_Spring_Volleyball_2026.xlsx.
+-- Run after migrations/0001_init.sql. Re-running resets names to these values.
+insert into public.teams (id, division, pool, spot, name) values
+  ('WA1','W','A',1,'WFA women’s'),
+  ('WA2','W','A',2,'Pie Hards'),
+  ('WA3','W','A',3,'Kiss my ace!'),
+  ('WA4','W','A',4,'FilNZ Nation Select'),
+  ('WB1','W','B',1,'Served Hot'),
+  ('WB2','W','B',2,'TVC Lakers'),
+  ('WB3','W','B',3,'Orcas'),
+  ('WB4','W','B',4,'DA’Cubs - Pumas'),
+  ('SA1','S','A',1,'BSB Players'),
+  ('SA2','S','A',2,'Rebound'),
+  ('SA3','S','A',3,'POLYHITTAHz'),
+  ('SA4','S','A',4,'Easytrip Tauranga'),
+  ('SB1','S','B',1,'Moonlight FC'),
+  ('SB2','S','B',2,'Pine City 886'),
+  ('SB3','S','B',3,'Meow Meow'),
+  ('SB4','S','B',4,'WOOL'),
+  ('CA1','C','A',1,'Auckland Knights'),
+  ('CA2','C','A',2,'Flying Turtles'),
+  ('CA3','C','A',3,'Just The Tip'),
+  ('CA4','C','A',4,'Sharks'),
+  ('CB1','C','B',1,'Sunbears'),
+  ('CB2','C','B',2,'AC3'),
+  ('CB3','C','B',3,'Toxiciteam'),
+  ('CB4','C','B',4,'Brain Cells'),
+  ('CC1','C','C',1,'Chinese Giants'),
+  ('CC2','C','C',2,'bush was'),
+  ('CC3','C','C',3,'Vipers'),
+  ('CC4','C','C',4,'TNT Boys')
+on conflict (id) do update set name = excluded.name;
