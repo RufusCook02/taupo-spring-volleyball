@@ -1,11 +1,10 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DIVISIONS, type Division } from '@/data/draw';
 import AutoRefresh from '@/components/AutoRefresh';
 import GameCard from '@/components/GameCard';
 import StandingsTable from '@/components/StandingsTable';
 import { getPublicState } from '@/lib/data';
-import { DIV_BY_SLUG, fmtDiff } from '@/lib/format';
+import { DIV_BY_SLUG } from '@/lib/format';
 
 export const revalidate = 15;
 export const dynamicParams = false;
@@ -81,51 +80,6 @@ export default async function DivisionPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
       </section>
-
-      {division === 'C' && (
-        <section>
-          <h2 className="heading mb-2 text-xl">
-            Playoff seeding {!state.seeding.ready && <span className="text-sm font-normal text-ink-muted">(provisional)</span>}
-          </h2>
-          <div className="card overflow-x-auto">
-            <table className="tabular w-full text-sm">
-              <thead className="bg-mist text-xs text-ink-muted">
-                <tr>
-                  <th className="px-2 py-1 text-left">Seed</th>
-                  <th className="px-2 py-1 text-left">Team</th>
-                  <th className="px-1 py-1">Pool</th>
-                  <th className="px-1 py-1">W</th>
-                  <th className="px-1 py-1">Pts</th>
-                  <th className="px-2 py-1">+/-</th>
-                </tr>
-              </thead>
-              <tbody>
-                {state.seeding.rows.map((r) => (
-                  <tr key={r.seed} className={`border-t ${r.seed === 9 ? 'border-t-2 border-t-navy' : ''}`}>
-                    <td className="px-2 py-1.5 font-semibold">{r.seed}</td>
-                    <td className="px-2 py-1.5">
-                      {r.teamId ? (
-                        <Link href={`/team/${r.teamId}`} className="hover:underline">
-                          {names[r.teamId]}
-                        </Link>
-                      ) : (
-                        <span className="italic text-amber-800">Tie – organiser to decide</span>
-                      )}
-                    </td>
-                    <td className="px-1 text-center">{r.poolKey ? `${r.poolKey.slice(1)} ${['1st', '2nd', '3rd', '4th'][r.place - 1]}` : ''}</td>
-                    <td className="px-1 text-center">{r.wins}</td>
-                    <td className="px-1 text-center">{r.pts}</td>
-                    <td className="px-2 text-center">{fmtDiff(r.diff)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-1 text-xs text-ink-muted">
-            Seeds 1–8 play quarter-finals (1v8, 2v7, 3v6, 4v5). Seeds 9–12 play 9th–12th semis (9v12, 10v11).
-          </p>
-        </section>
-      )}
 
       <section>
         <h2 className="heading mb-2 text-xl">Playoffs (Sunday)</h2>
